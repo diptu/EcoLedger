@@ -28,7 +28,7 @@ jobs:
 
       # Install dev dependencies (should include ruff, mypy, pylint in pyproject.toml)
       - name: Install deps (dev)
-        run: uv sync --group dev --extra dev
+        run: uv sync --group dev
 
       # Run ruff (linting)
       - name: Ruff Lint
