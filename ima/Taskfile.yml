@@ -1,0 +1,71 @@
+version: "3"
+
+tasks:
+  start:
+    desc: "Start the FastAPI server"
+    cmds:
+      - uv run uvicorn app.main:app --reload --port 8001
+
+  test:
+    desc: "Run all tests"
+    cmds:
+      - uv run pytest
+
+  test-unit:
+    desc: "Run only unit tests"
+    cmds:
+      - uv run pytest app/tests/unit/
+
+  test-integration:
+    desc: "Run only integration tests"
+    cmds:
+      - uv run pytest app/tests/integration/
+
+  test-e2e:
+    desc: "Run only end-to-end (e2e) tests"
+    cmds:
+      - uv run pytest app/tests/e2e/
+
+  test-health:
+    desc: "Run only health endpoint test"
+    cmds:
+      - uv run pytest app/tests/unit/test_health.py
+
+  coverage:
+    desc: "Run tests with coverage report"
+    cmds:
+      - uv run pytest --cov=app --cov-report=term-missing
+
+  lint:
+    desc: "Lint the code using ruff"
+    cmds:
+      - uv run ruff check app
+
+  lint-fix:
+    desc: "Automatically fix lint issues"
+    cmds:
+      - uv run ruff check app --fix
+
+  format:
+    desc: "Format code using black and isort"
+    cmds:
+      - uv run black . || (uv add --dev black && uv run black .)
+      - uv run isort . || (uv add --dev isort && uv run isort .)
+
+  typecheck:
+    desc: "Type checking with mypy"
+    cmds:
+      - uv run mypy app
+
+  precommit:
+    desc: "Run pre-commit hooks"
+    cmds:
+      - uv run pre-commit run --all-files
+
+  ci:
+    desc: "Run lint, typecheck, and tests (for CI/CD pipelines)"
+    deps: [lint, typecheck, test]
+
+  fix:
+    desc: "Auto-format and fix lint issues"
+    deps: [format, lint-fix]
