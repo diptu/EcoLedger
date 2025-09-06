@@ -41,6 +41,15 @@ tasks:
     cmds:
       - uv run ruff check app
 
+  pylint:
+    desc: "Lint the code using pylint"
+    cmds:
+      - uv run pylint app
+
+  lint-all:
+    desc: "Run both ruff and pylint"
+    deps: [lint, pylint]
+
   lint-fix:
     desc: "Automatically fix lint issues"
     cmds:
@@ -63,8 +72,8 @@ tasks:
       - uv run pre-commit run --all-files
 
   ci:
-    desc: "Run lint, typecheck, and tests (for CI/CD pipelines)"
-    deps: [lint, typecheck, test]
+    desc: "Run lint-all, typecheck, and tests (for CI/CD pipelines)"
+    deps: [lint-all, typecheck, test]
 
   fix:
     desc: "Auto-format and fix lint issues"
