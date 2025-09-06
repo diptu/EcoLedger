@@ -6,7 +6,9 @@ configured via the HOST and PORT environment variables.
 """
 
 import os
+
 import uvicorn
+
 from app.main import app
 
 
