@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: auth-service
+        working-directory: ima
     steps:
       # Checkout repo
       - uses: actions/checkout@v4
