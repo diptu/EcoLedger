@@ -1,10 +1,10 @@
 """
 FastAPI entrypoint for the IMA Service.
-
-Defines the main FastAPI app instance and root health-check endpoint.
 """
 
 from fastapi import FastAPI
+
+from app.api.v1 import api_v1_router
 
 app = FastAPI(
     title="IMA Service",
@@ -12,12 +12,5 @@ app = FastAPI(
     version="0.1.0",
 )
 
-
-@app.get("/")
-async def read_root() -> dict[str, str]:
-    """
-    Root endpoint for health check.
-
-    Returns a simple JSON message confirming the service is running.
-    """
-    return {"message": "Hello World!"}
+# Include API v1 routers
+app.include_router(api_v1_router, prefix="/api/v1")

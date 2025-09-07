@@ -1,4 +1,8 @@
-"""Application settings using Pydantic Settings (async-ready)."""
+"""
+Application settings using Pydantic BaseSettings (async-ready).
+
+Provides configuration for database, Redis, and application-level settings.
+"""
 
 from typing import Optional
 
@@ -15,10 +19,7 @@ class DatabaseSettings(BaseSettings):
     replica1_host: Optional[str] = Field(None, alias="DB_REPLICA1_HOST")
     replica2_host: Optional[str] = Field(None, alias="DB_REPLICA2_HOST")
 
-    model_config = SettingsConfigDict(
-        env_file=".env",
-        extra="allow",
-    )
+    model_config = SettingsConfigDict(env_file=".env", extra="allow")
 
 
 class RedisSettings(BaseSettings):
@@ -28,12 +29,9 @@ class RedisSettings(BaseSettings):
     port: int = Field(..., alias="REDIS_PORT")
     password: str = Field(..., alias="REDIS_PASSWORD")
     db: int = Field(..., alias="REDIS_DB")
-    cache_ttl: int = Field(..., alias="REDIS_CACHE_TTL")
+    cache_ttl: int = Field(3600, alias="REDIS_CACHE_TTL")  # default 1 hour
 
-    model_config = SettingsConfigDict(
-        env_file=".env",
-        extra="allow",
-    )
+    model_config = SettingsConfigDict(env_file=".env", extra="allow")
 
 
 class RateLimitSettings(BaseSettings):
@@ -42,10 +40,7 @@ class RateLimitSettings(BaseSettings):
     count: int = Field(5, alias="RATE_LIMIT_COUNT")
     window: int = Field(60, alias="RATE_LIMIT_WINDOW")
 
-    model_config = SettingsConfigDict(
-        env_file=".env",
-        extra="allow",
-    )
+    model_config = SettingsConfigDict(env_file=".env", extra="allow")
 
 
 class Settings(BaseSettings):
@@ -57,22 +52,13 @@ class Settings(BaseSettings):
     debug: bool = Field(..., alias="DEBUG")
     port: int = Field(..., alias="PORT")
 
-    # Nested settings with default factories (no lambda needed)
-    database: DatabaseSettings = Field(
-        default_factory=DatabaseSettings  # type: ignore[arg-type]
-    )
-    redis: RedisSettings = Field(
-        default_factory=RedisSettings  # type: ignore[arg-type]
-    )
-    rate_limit: RateLimitSettings = Field(
-        default_factory=RateLimitSettings  # type: ignore[arg-type]
-    )
+    database: DatabaseSettings = DatabaseSettings()  # type: ignore[call-arg]
+    redis: RedisSettings = RedisSettings()  # type: ignore[call-arg]
+    # jwt: JWTSettings = JWTSettings()  # Uncomment when JWTSettings is defined
+    # rate_limit: RateLimitSettings = RateLimitSettings()  # Uncomment if needed
 
-    model_config = SettingsConfigDict(
-        env_file=".env",
-        extra="allow",
-    )
+    model_config = SettingsConfigDict(env_file=".env", extra="allow")
 
 
 # Singleton instance (mypy cannot know env vars at type-check time)
-settings = Settings()  # type: ignore[call-arg]
+settings: Settings = Settings()  # type: ignore[call-arg]

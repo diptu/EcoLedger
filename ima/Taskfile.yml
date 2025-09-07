@@ -1,11 +1,40 @@
 version: "3"
 
 tasks:
+  # -------------------------
+  # Development Server
+  # -------------------------
   start:
     desc: "Start the FastAPI server"
     cmds:
       - uv run uvicorn app.main:app --reload --port 8001
 
+
+  # -------------------------
+  # Kill processes
+  # -------------------------
+  kill-server-8000:
+    desc: "Kill any process running on port 8000"
+    cmds:
+      - lsof -ti:8000 | xargs -r kill -9
+  
+  kill-server-8001:
+    desc: "Kill any process running on port 8001"
+    cmds:
+      - lsof -ti:8001 | xargs -r kill -9
+
+  kill-postgres:
+    desc: "Kill any process running on port 5432"
+    cmds:
+      - lsof -ti:5432 | xargs -r kill -9
+
+  kill-all:
+    desc: "Kill processes running on ports 8000, 8001, and 5432"
+    deps: [kill-server-8000, kill-server-8001, kill-postgres]
+
+  # -------------------------
+  # Tests
+  # -------------------------
   test:
     desc: "Run all tests"
     cmds:
@@ -36,6 +65,9 @@ tasks:
     cmds:
       - uv run pytest --cov=app --cov-report=term-missing
 
+  # -------------------------
+  # Linting & Formatting
+  # -------------------------
   lint:
     desc: "Lint the code using ruff"
     cmds:
@@ -61,6 +93,10 @@ tasks:
       - uv run black . || (uv add --dev black && uv run black .)
       - uv run isort . || (uv add --dev isort && uv run isort .)
 
+  fix:
+    desc: "Auto-format and fix lint issues"
+    deps: [format, lint-fix]
+
   typecheck:
     desc: "Type checking with mypy"
     cmds:
@@ -71,10 +107,9 @@ tasks:
     cmds:
       - uv run pre-commit run --all-files
 
+  # -------------------------
+  # CI/CD
+  # -------------------------
   ci:
     desc: "Run lint-all, typecheck, and tests (for CI/CD pipelines)"
     deps: [lint-all, typecheck, test]
-
-  fix:
-    desc: "Auto-format and fix lint issues"
-    deps: [format, lint-fix]

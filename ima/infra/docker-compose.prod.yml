@@ -1,4 +1,4 @@
-# File: infra/docker-compose.yml
+# File: infra/docker-compose.prod.yml
 version: "3.9"
 
 networks:
@@ -9,19 +9,19 @@ services:
   ima-service:
     build:
       context: ..
-      dockerfile: infra/Dockerfile
+      dockerfile: infra/Dockerfile.prod
     container_name: ima-service
     env_file: ../.env
     environment:
-      ENV: "${ENV}"
-      DEBUG: "${DEBUG}"
-      PORT: "${PORT}"
-      BASE_URL: "${BASE_URL}"
-      DB_URI: "${DB_URI}"
-      REDIS_URL: "${REDIS_URL}"
-      JWT_SECRET_KEY: "${JWT_SECRET_KEY}"
+      ENV: "prod"
+      DEBUG: "False"
+      PORT: 8000
+      BASE_URL: ${BASE_URL}
+      DB_URI: ${DB_URI}
+      REDIS_URL: ${REDIS_URL}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
     ports:
-      - "8001:8000"
+      - "8000:8000"
     depends_on:
       db:
         condition: service_healthy
@@ -31,23 +31,23 @@ services:
     networks:
       - ima_network
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:8000/health/ || exit 1"]
-      interval: 15s
-      timeout: 5s
-      retries: 3
-      start_period: 5s
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health/server || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
 
   db:
     image: postgres:17-alpine
     container_name: ima-db
     environment:
-      POSTGRES_DB: "${DB_NAME}"
-      POSTGRES_USER: "${DB_USER}"
-      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - db_data:/var/lib/postgresql/data
     ports:
-      - "3:5432"
+      - "5433:5432"
     restart: unless-stopped
     networks:
       - ima_network
