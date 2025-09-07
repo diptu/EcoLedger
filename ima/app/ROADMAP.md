@@ -5,7 +5,7 @@
 - [x] Configure PostgreSQL  
 - [x] Setup .env for configs  
 - [x] Create database session (AsyncSession)  
-- [] Configure Alembic for migrations  
+- [x] Configure Alembic for migrations  
 - [] Configure logging and structured logs (JSON) for observability  
 - [] Include Sentry / error reporting integration (optional but recommended)  
 - [x] Set up UV as package manager and lock dependencies (`uv.lock`)  

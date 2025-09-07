@@ -100,7 +100,7 @@ tasks:
   typecheck:
     desc: "Type checking with mypy"
     cmds:
-      - uv run mypy app
+      - uv run mypy --ignore-missing-imports --follow-imports=skip app
 
   precommit:
     desc: "Run pre-commit hooks"

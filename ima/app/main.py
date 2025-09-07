@@ -2,9 +2,8 @@
 FastAPI entrypoint for the IMA Service.
 """
 
-from fastapi import FastAPI
-
 from app.api.v1 import api_v1_router
+from fastapi import FastAPI
 
 app = FastAPI(
     title="IMA Service",

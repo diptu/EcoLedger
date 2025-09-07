@@ -8,11 +8,10 @@ with error handling for FastAPI endpoints.
 
 from collections.abc import AsyncGenerator
 
+from app.core.config import settings
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import (AsyncSession, async_sessionmaker,
                                     create_async_engine)
-
-from app.core.config import settings
 
 # Async engine for PostgreSQL/NeonDB
 engine = create_async_engine(

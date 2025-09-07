@@ -5,6 +5,7 @@ description = "IMA permission-based auth service (FastAPI)"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "alembic>=1.16.5",
     "anyio[asyncio,trio]>=4.10.0",
     "asyncpg>=0.30.0",
     "fastapi[standard]>=0.116.1",
@@ -16,6 +17,7 @@ dependencies = [
     "pytest-asyncio>=1.1.0",
     "redis[async]>=6.4.0",
     "sqlalchemy>=2.0.43",
+    "sqlmodel>=0.0.24",
     "uvicorn>=0.35.0",
 ]
 
