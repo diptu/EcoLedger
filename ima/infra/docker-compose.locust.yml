@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  locust-master:
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile.locust
+    container_name: locust-master
+    command: >
+      locust -f locust/locustfile.py
+      --master
+      --host=${TARGET_HOST:-http://localhost:8000}
+    ports:
+      - "8089:8089"   # Web UI
+      - "5557:5557"   # Master <-> Worker comm
+      - "5558:5558"
+    environment:
+      LOCUST_USER: ${LOCUST_USER:-perf_user}
+      LOCUST_PASS: ${LOCUST_PASS:-perf_pass}
+    volumes:
+      - ../locust:/mnt/locust
+      - ../locust/reports:/mnt/reports
+
+  locust-worker:
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile.locust
+    command: >
+      locust -f locust/locustfile.py
+      --worker
+      --master-host=locust-master
+    environment:
+      LOCUST_USER: ${LOCUST_USER:-perf_user}
+      LOCUST_PASS: ${LOCUST_PASS:-perf_pass}
+    depends_on:
+      - locust-master
+    volumes:
+      - ../locust:/mnt/locust
+      - ../locust/reports:/mnt/reports

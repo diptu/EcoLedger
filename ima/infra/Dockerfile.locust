@@ -1,0 +1,21 @@
+FROM python:3.11-slim
+
+# Install system deps
+RUN apt-get update && apt-get install -y gcc curl && rm -rf /var/lib/apt/lists/*
+
+# Set workdir
+WORKDIR /mnt
+
+# Copy project deps (from your root pyproject.toml)
+COPY pyproject.toml uv.lock ./
+
+# Install Locust + project deps
+RUN pip install --upgrade pip && pip install locust prometheus_client requests
+
+# Copy locust files only (keeps image light)
+COPY locust/ /mnt/locust/
+
+# Expose Locust web UI + Prometheus port
+EXPOSE 8089 8000
+
+CMD ["locust", "-f", "locust/locustfile.py", "--host=http://localhost:8000"]

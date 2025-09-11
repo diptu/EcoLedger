@@ -210,3 +210,4 @@ __marimo__/
 # Custom
 
 .pre-commit-config.yaml
+.alembic.ini

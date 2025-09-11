@@ -1,0 +1,36 @@
+# infra/docker-compose.jaeger.yml
+version: "3.8"
+
+services:
+  jaeger:
+    image: jaegertracing/all-in-one:1.59
+    container_name: jaeger
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    ports:
+      - "16686:16686"   # UI
+      - "4317:4317"     # OTLP gRPC
+      - "4318:4318"     # OTLP HTTP
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:16686"]
+      interval: 10s
+      timeout: 2s
+      retries: 10
+
+  # ima-service:
+  #   build:
+  #     context: ..             # project root where pyproject.toml & uv.lock are
+  #     dockerfile: infra/Dockerfile
+  #   container_name: ima-service
+  #   command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+  #   volumes:
+  #     - ..:/app               # mount project root
+  #   environment:
+  #     - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4318/v1/traces
+  #     - OTEL_SERVICE_NAME=ima-service
+  #     - OTEL_PYTHON_LOG_CORRELATION=true
+  #   depends_on:
+  #     jaeger:
+  #       condition: service_healthy
+  #   ports:
+  #     - "8000:8000"

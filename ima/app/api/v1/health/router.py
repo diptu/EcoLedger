@@ -16,8 +16,12 @@ from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from .docs import (DATABASE_HEALTH_DOCS, FULL_HEALTH_DOCS, REDIS_HEALTH_DOCS,
-                   SERVER_HEALTH_DOCS)
+from .docs import (
+    DATABASE_HEALTH_DOCS,
+    FULL_HEALTH_DOCS,
+    REDIS_HEALTH_DOCS,
+    SERVER_HEALTH_DOCS,
+)
 from .schemas import HealthCheckResponse
 from .utils import check_health as _check_health
 

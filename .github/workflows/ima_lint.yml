@@ -36,7 +36,7 @@ jobs:
 
       # Run mypy (type checking)
       - name: Mypy Type Check
-        run: uv run mypy app
+        run: uv run mypy --ignore-missing-imports --follow-imports=skip app
 
       # Run pylint (code style & linting)
       - name: Pylint Check

@@ -6,7 +6,8 @@
 - [x] Setup .env for configs  
 - [x] Create database session (AsyncSession)  
 - [x] Configure Alembic for migrations  
-- [] Configure logging and structured logs (JSON) for observability  
+- [x] Configure logging and structured logs (JSON) for observability  
+- [x]  Performance bench mark with locust
 - [] Include Sentry / error reporting integration (optional but recommended)  
 - [x] Set up UV as package manager and lock dependencies (`uv.lock`)  
 - [x] Configure pre-commit hooks: ruff, black, isort, mypy, pylint  

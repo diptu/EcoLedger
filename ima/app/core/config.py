@@ -43,6 +43,18 @@ class RateLimitSettings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="allow")
 
 
+class SentrySettings(BaseSettings):
+    """Sentry error reporting configuration."""
+
+    dsn: Optional[str] = Field(None, alias="SENTRY_DSN")
+    environment: str = Field("development", alias="SENTRY_ENVIRONMENT")
+    release: Optional[str] = Field(None, alias="SENTRY_RELEASE")
+    traces_sample_rate: float = Field(0.1, alias="SENTRY_TRACES_SAMPLE_RATE")
+    debug: bool = Field(False, alias="SENTRY_DEBUG")
+
+    model_config = SettingsConfigDict(env_file=".env", extra="allow")
+
+
 class Settings(BaseSettings):
     """Main application settings."""
 
@@ -54,6 +66,7 @@ class Settings(BaseSettings):
 
     database: DatabaseSettings = DatabaseSettings()  # type: ignore[call-arg]
     redis: RedisSettings = RedisSettings()  # type: ignore[call-arg]
+    # sentry: SentrySettings = SentrySettings()  # type: ignore[call-arg]
     # jwt: JWTSettings = JWTSettings()  # Uncomment when JWTSettings is defined
     # rate_limit: RateLimitSettings = RateLimitSettings()  # Uncomment if needed
 
